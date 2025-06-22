@@ -2,6 +2,7 @@
 select*
 from bellabeat.dbo.dailyActivity_merged
 
+--DATA EXPLORATION
 ---TO SEE RELATIONS BETWEEN DIFFERENT VARIABLES WITH AMOUNTOF CALORIES BURN
 --1. to see relationship btwn total steps and calories burn
 select id,
@@ -29,12 +30,17 @@ select id,
 	sum(LightlyActiveMinutes) as LightActiveMinutes, 
 	sum(SedentaryMinutes) as SedentaryMinutes, 
 	sum(Calories) as Calories
+into MinutesAndCalories
 from bellabeat.dbo.dailyActivity_merged
 group by id
 order by id
 
+select*
+from MinutesAndCalories
+order by id
+
 --TO SEE HOW LONG ACTIVITIES PER DAY WERE RECORDED BY EACH USER
---1. FOr Recorded user activity
+--4. FOr Recorded user activity
 --create table from existing table
 select id,
 	VeryActiveMinutes,
@@ -66,7 +72,7 @@ from (
 ) as activity_summary
 order by id;
 
---2. For recorded user sleeping hour 
+--5. For recorded user sleeping hour 
 select 
 	Id,
 	sum(TotalMinutesAsleep/60.0) as TotalHourSleep
@@ -83,7 +89,7 @@ order by id
 --this shows that some user does not record their sleep usingbelllabeat
 --looking from all the relationships at point no 1,2 & 3, the number of id is lesser. shows that some user did not input their sleeping hour
 
---3. TO SEE HOW MANY AND HOW OFTEN USER INPUT THEIR WEIGHT INFO INTO BELLABEAT
+--6. TO SEE HOW MANY AND HOW OFTEN USER INPUT THEIR WEIGHT INFO INTO BELLABEAT
 --new table
 select
 	id,
@@ -111,4 +117,63 @@ select
 from NewWeightInfo
 group by id
 order by id
-	
+
+--7. to see how intensity can be relate to daily activities
+-----see intensity by days
+------my hypothesis is; higher intensities indicates higher very active minutes in daily activity table
+select
+	id,
+	cast(ActivityHour as date) as ActivityDate,
+	sum(TotalIntensity) as TotalIntensityPerDay
+from bellabeat.dbo.hourlyIntensities_merged
+group by id, cast(ActivityHour as date) 
+order by id, ActivityDate
+
+-----now, to see how many days and hours were recorded for each user 
+drop table intensityTable
+select
+	id,
+	count(*) as HoursRecorded,
+	count(distinct(cast(ActivityHour as date))) as DaysRecorded
+into intensityTable
+from bellabeat.dbo.hourlyIntensities_merged
+where TotalIntensity  is not null
+	and AverageIntensity is not null
+group by id
+order by HoursRecorded desc
+
+select*
+from intensityTable
+order by HoursRecorded desc
+
+------my hypothesis is; higher intensities indicates higher very active minutes in daily activity table
+-------first, i have to merge the two tables; intensities and daily activity. using table from solution no.3:
+drop table CombinedTable
+select
+	intensityTable.id,
+	intensityTable.HoursRecorded,
+	intensityTable.DaysRecorded,
+	MinutesAndCalories.VeryActiveMinutes,
+	MinutesAndCalories.FairlyActiveMinutes,
+	MinutesAndCalories.LightActiveMinutes,
+	MinutesAndCalories.SedentaryMinutes
+into CombinedTable
+from 
+	intensityTable
+inner join 
+	MinutesAndCalories
+	on intensityTable.id = MinutesAndCalories.id
+
+select
+	id,
+	HoursRecorded,
+	DaysRecorded,
+	(VeryActiveMinutes+FairlyActiveMinutes+LightActiveMinutes+SedentaryMinutes)/60.0 as TotalHours,
+	((VeryActiveMinutes+FairlyActiveMinutes+LightActiveMinutes+SedentaryMinutes)/60.0)/24.0 as TotalDays
+from CombinedTable
+order by HoursRecorded desc,
+		TotalHours desc
+
+/*it seems the number of hours and days from intensity table are different from activity tables, eventhough for some user, the data seems 
+tally to each other. this is possibly due to data recorded from bellabeat's app/tools are not tally to each other. 
+this is a common problem in technology device or app*/
