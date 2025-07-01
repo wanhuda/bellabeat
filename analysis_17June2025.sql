@@ -1,3 +1,4 @@
+--THIS ANALYSIS WAS DONE USING MICROSOFT SQL SERVER MANAGEMENT STUDIO
 --to see how much calories are burn depending on a user activity
 select*
 from bellabeat.dbo.dailyActivity_merged
@@ -73,19 +74,15 @@ from (
 order by id;
 
 --5. For recorded user sleeping hour 
+drop table bellabeat.dbo.sleeprecorded
 select 
 	Id,
-	sum(TotalMinutesAsleep/60.0) as TotalHourSleep
+	sum(TotalMinutesAsleep/60.0) as TotalHourSleep,
+	count (SleepDay) as SleepDay
 into bellabeat.dbo.sleeprecorded
 from bellabeat.dbo.sleep_day
 group by id
 
---to see sleeping days recorded
-select
-	id,
-	TotalHourSleep/24.0 as DaySleepRecorded
-from bellabeat.dbo.sleeprecorded
-order by id
 --this shows that some user does not record their sleep usingbelllabeat
 --looking from all the relationships at point no 1,2 & 3, the number of id is lesser. shows that some user did not input their sleeping hour
 
