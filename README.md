@@ -1,4 +1,7 @@
-Full report for my Bellabeat Analysis:
-![Click this](https://54d28fe4b809406d962f27492e84992a.app.posit.cloud/file_show?path=%2Fcloud%2Fproject%2FBellabeatanalysis.html)
+## Bellabeat Data Analysis Report
 
-![Checkout my Tableau page for more visualization that I did](https://public.tableau.com/app/profile/wan.nur.huda.binti.wan.yunus/vizzes)
+This project analyse smart device usage to provide insights for Bellabeat's products marketing strategy and increase user engagement.
+
+[View full report here](https://rpubs.com/wanhuda/1326788)
+
+[View visualization here](https://public.tableau.com/app/profile/wan.nur.huda.binti.wan.yunus/vizzes)
