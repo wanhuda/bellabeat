@@ -6,7 +6,5 @@ This project analyses smart device usage to provide insights for Bellabeat's pro
 
 Dashboard:
 ![](Dashboard b1.png) 
-
 ![ ](Dashboard b2.png)
-
 ![ ](Dashboard b3.png)
