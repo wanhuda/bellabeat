@@ -5,6 +5,5 @@ This project analyses smart device usage to provide insights for Bellabeat's pro
 [View full report here](https://rpubs.com/wanhuda/1326788)
 
 Dashboard:
-![Dashboard](Dashboardb1.png)
-![Dashboard](Dashboardb2.png)
-![Dashboard](Dashboardb3.png)
+![Dashboard](BellabeatDashboard1.png)
+![Dashboard](BellabeatDashboard2.png)
